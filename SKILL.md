@@ -1,13 +1,13 @@
 ---
 name: etherlink
-description: Etherlink blockchain interaction - EVM-compatible L2 on Tezos. Supports both mainnet and shadownet testnet via MCP server.
+description: Etherlink blockchain interaction - EVM-compatible L2 on Tezos. Supports mainnet and shadownet testnet via MCP server. Use for balance checks, transactions, smart contracts, and token operations on Etherlink.
 tags: [blockchain, evm, tezos, l2, web3, etherlink, mcp]
 version: 1.0.0
 ---
 
 # Etherlink Skill
 
-Interact with [Etherlink](https://etherlink.com), an EVM-compatible L2 built on Tezos. This skill provides access via a forked `evm-mcp-server` with Etherlink networks pre-configured.
+Interact with [Etherlink](https://etherlink.com), an EVM-compatible L2 built on Tezos.
 
 ## Quick Start
 
@@ -19,21 +19,14 @@ Add to your Claude/MCP config:
 {
   "mcpServers": {
     "etherlink": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/etherlink-mcp-server"],
+      "command": "bun",
+      "args": ["run", "/path/to/etherlink-mcp-server/src/index.ts"],
       "env": {
-        "PRIVATE_KEY": "your-private-key-here"
+        "EVM_PRIVATE_KEY": "your-private-key-here"
       }
     }
   }
 }
-```
-
-Or run locally:
-```bash
-cd etherlink-mcp-server
-bun install
-bun run start
 ```
 
 ### 2. Select Network
@@ -75,9 +68,9 @@ Get latest block on etherlink
 
 ## Etherlink-Specific Notes
 
-### What's Different from Ethereum
+### Key Differences
 
-1. **Native Currency**: XTZ, not ETH
+1. **Native Currency**: XTZ (Tez), not ETH
 2. **No EIP-1559**: Fee market not yet implemented - use legacy gas pricing
 3. **Block Hashes**: Computed differently (can't verify from header alone)
 4. **Rate Limits**: Public RPC limited to 1000 req/min
@@ -91,7 +84,7 @@ Get latest block on etherlink
 - ❌ Filter endpoints (eth_newFilter, etc.)
 
 ### Tezos L1 Bridge
-Etherlink bridges to Tezos L1 for deposits/withdrawals. Bridge operations require Tezos tooling (not EVM). See [Etherlink Docs](https://docs.etherlink.com/building-on-etherlink/bridging) for bridge details.
+Etherlink bridges to Tezos L1 for deposits/withdrawals. Bridge operations require Tezos tooling. See [Etherlink Docs](https://docs.etherlink.com/building-on-etherlink/bridging) for details.
 
 ## Testnet Faucet
 
@@ -99,11 +92,11 @@ Get testnet XTZ: https://shadownet.faucet.etherlink.com
 
 ## Troubleshooting
 
-**"Unsupported network"**: Ensure you're using the correct network name (`etherlink`, `etherlink-shadownet`) or chain ID.
+**"Unsupported network"**: Use correct network name (`etherlink`, `etherlink-shadownet`) or chain ID.
 
-**Rate limited**: Public RPC has 1000 req/min limit. For production, consider running your own node.
+**Rate limited**: Public RPC has 1000 req/min limit. For production, run your own node.
 
-**Transaction failing**: Remember no EIP-1559 - ensure you're not setting `maxFeePerGas`/`maxPriorityFeePerGas`.
+**Transaction failing**: No EIP-1559 - don't set `maxFeePerGas`/`maxPriorityFeePerGas`.
 
 ## Resources
 
