@@ -1,6 +1,6 @@
-# Openclaw Etherlink Skill 🤖
+# Etherlink Skill
 
-A [ClawdHub](https://www.clawhub.ai/efekucuk/etherlink) skill for interacting with **Etherlink** - an EVM-compatible Layer 2 blockchain built on Tezos.
+A [ClawdHub](https://clawdhub.com) skill for interacting with **Etherlink** - an EVM-compatible Layer 2 blockchain built on Tezos.
 
 ## What's Included
 
@@ -24,3 +24,29 @@ A [ClawdHub](https://www.clawhub.ai/efekucuk/etherlink) skill for interacting wi
 ### Via ClawdHub
 ```bash
 clawdhub install etherlink
+```
+
+### Manual
+Clone this repo into your skills directory.
+
+## Usage
+
+This skill works with the [etherlink-mcp-server](https://github.com/efekucuk/etherlink-mcp-server). Configure the MCP server, then use natural language:
+
+- "Get balance for 0x... on etherlink"
+- "Send 0.1 XTZ to 0x... on etherlink"
+- "Call balanceOf on contract 0x... on etherlink"
+
+## Testnet Faucet
+
+Get free testnet XTZ: https://shadownet.faucet.etherlink.com
+
+## Resources
+
+- [Etherlink Documentation](https://docs.etherlink.com/)
+- [Block Explorer](https://explorer.etherlink.com)
+- [etherlink-mcp-server](https://github.com/efekucuk/etherlink-mcp-server)
+
+## License
+
+MIT

@@ -1,19 +1,20 @@
-# Etherlink vs Standard Ethereum
+# Etherlink vs Standard EVM Chains
 
-Etherlink is EVM-compatible but has some differences from Ethereum mainnet.
+Etherlink is EVM-compatible but has some unique characteristics.
 
-## Key Differences
+## Key Characteristics
 
 ### 1. Native Currency
 - **Etherlink**: XTZ (Tez)
-- **Ethereum**: ETH
-
-Same 18 decimals, but different symbol and economics.
+- Same 18 decimals as ETH, different symbol and economics
 
 ### 2. Gas & Fees
-- **No EIP-1559**: Etherlink doesn't have the EIP-1559 fee market yet
-- Use legacy `gasPrice` transactions, not `maxFeePerGas`/`maxPriorityFeePerGas`
-- Gas prices are typically very low compared to Ethereum mainnet
+- **EIP-1559 Supported**: Uses `max_fee_per_gas` field
+- **No Priority Fees**: `max_priority_fee_per_gas` is ignored - sequencer uses first-come-first-served ordering
+- **Fee Components**:
+  - Execution fee: Varies with network throughput (minimum 1 gwei)
+  - Inclusion fee: Covers data availability on Tezos L1
+- Gas prices are typically very low
 
 ### 3. Block Hashes
 Block hashes are computed differently on Etherlink. You cannot verify block hashes solely from the block header. This affects:
@@ -21,11 +22,14 @@ Block hashes are computed differently on Etherlink. You cannot verify block hash
 - Block hash verification tools
 
 ### 4. Finality
-Etherlink inherits finality from Tezos L1. Transactions are final once:
-1. Included in an Etherlink block
-2. That block's commitment is finalized on Tezos
+- ~500ms for sequencer confirmation
+- ~8 seconds for data posted to Tezos L1
+- Full finality after Tezos confirmation
 
-Practical finality: ~30 seconds for Etherlink block, ~30 minutes for L1 finality.
+### 5. WebSockets
+- Supported when running your own node with `--ws` flag
+- `eth_subscribe` works for newBlockHeaders, logs, etc.
+- Public RPC nodes don't expose WebSocket endpoints publicly
 
 ## Supported RPC Methods
 
@@ -40,15 +44,20 @@ Practical finality: ~30 seconds for Etherlink block, ~30 minutes for L1 finality
 - `eth_call`
 - `eth_estimateGas`
 - `eth_gasPrice`
+- `eth_maxPriorityFeePerGas`
+- `eth_feeHistory`
 - `eth_sendRawTransaction`
 - `eth_getLogs`
 - `eth_getCode`
 - `eth_getStorageAt`
 - `eth_getTransactionCount`
 - `debug_traceTransaction`
+- `debug_traceBlockByNumber`
+
+### Requires Own Node ⚠️
+- `eth_subscribe` (via WebSocket with `--ws` flag)
 
 ### Not Supported ❌
-- `eth_subscribe` (experimental only, limited)
 - `eth_syncing`
 - `eth_newFilter`
 - `eth_newBlockFilter`
@@ -78,12 +87,13 @@ For bridge operations, use the official bridge UI or Tezos SDKs.
 
 Most Solidity/EVM contracts work unchanged. Watch for:
 - Contracts relying on `PREVRANDAO` (may behave differently)
-- Contracts hardcoding gas prices with EIP-1559 assumptions
 - Contracts verifying block hashes
+- Contracts that depend on priority fee mechanics
 
 ## Best Practices
 
-1. **Use legacy transactions** until EIP-1559 is supported
+1. **Don't set priority fees** - they're ignored anyway
 2. **Don't rely on block hashes** for verification
 3. **Account for bridge delays** in UX
 4. **Test on Shadownet first** - it mirrors mainnet behavior
+5. **Run your own node** for WebSocket subscriptions

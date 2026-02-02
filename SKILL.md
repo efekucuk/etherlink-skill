@@ -68,20 +68,19 @@ Get latest block on etherlink
 
 ## Etherlink-Specific Notes
 
-### Key Differences
+### Key Characteristics
 
-1. **Native Currency**: XTZ (Tez), not ETH
-2. **No EIP-1559**: Fee market not yet implemented - use legacy gas pricing
-3. **Block Hashes**: Computed differently (can't verify from header alone)
+1. **Native Currency**: XTZ (Tez)
+2. **EIP-1559**: Supported - uses `max_fee_per_gas`. Priority fees are ignored (sequencer uses first-come-first-served).
+3. **WebSockets**: Supported on self-hosted nodes with `--ws` flag
 4. **Rate Limits**: Public RPC limited to 1000 req/min
 
-### Supported Endpoints
-- ✅ eth_blockNumber, eth_chainId, eth_getBalance
-- ✅ eth_call, eth_estimateGas, eth_gasPrice
-- ✅ eth_sendRawTransaction, eth_getLogs
-- ✅ debug_traceTransaction
-- ❌ eth_subscribe (experimental only)
-- ❌ Filter endpoints (eth_newFilter, etc.)
+### Fee Structure
+
+- **Execution fee**: Varies with network throughput (minimum 1 gwei)
+- **Inclusion fee**: Covers data availability on Tezos L1
+
+No tips/priority fees needed - sequencer orders transactions first-come-first-served.
 
 ### Tezos L1 Bridge
 Etherlink bridges to Tezos L1 for deposits/withdrawals. Bridge operations require Tezos tooling. See [Etherlink Docs](https://docs.etherlink.com/building-on-etherlink/bridging) for details.
@@ -95,8 +94,6 @@ Get testnet XTZ: https://shadownet.faucet.etherlink.com
 **"Unsupported network"**: Use correct network name (`etherlink`, `etherlink-shadownet`) or chain ID.
 
 **Rate limited**: Public RPC has 1000 req/min limit. For production, run your own node.
-
-**Transaction failing**: No EIP-1559 - don't set `maxFeePerGas`/`maxPriorityFeePerGas`.
 
 ## Resources
 
